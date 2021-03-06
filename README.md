@@ -6,7 +6,10 @@
 4. Настроить маршрутизацию между сетями VLAN.
 5. Проверить, что маршрутизация между VLAN работает.
 ## Решение:
-
+1. Создание сети и настройка основных параметров устройства
+- Произведем базовую настройку маршрутизатора
+- Произведем базовую настройку коммутаторов
+- Настроим ПК
 
 
 **Топология**
@@ -41,7 +44,7 @@ R1#clock set 14:18:00 6 march 2021
 R1#
 ```
 
-**Произведем базовую настройку коммутаторов.** 
+**Произведем базовую настройку коммутаторов** 
 
 ```Switch>enable 
 Switch#configure terminal 
@@ -89,4 +92,29 @@ Building configuration...
 Compressed configuration from 992 bytes to 723 bytes[OK]
 S2#
 ```
-**Настроим ПК.**
+**Настроим ПК**
+```VPCS> set pcname PC-A
+
+PC-A> ip 192.168.3.3 255.255.255.0 192.168.3.1
+Checking for duplicate address...
+PC1 : 192.168.3.3 255.255.255.0 gateway 192.168.3.1
+
+PC-A> save
+Saving startup configuration to startup.vpc
+.  done
+
+PC-A> 
+```
+
+```VPCS> set pcname PC-B
+
+PC-B> ip 192.168.4.3 255.255.255.0 192.168.4.1
+Checking for duplicate address...
+PC1 : 192.168.4.3 255.255.255.0 gateway 192.168.4.1
+
+PC-B> save
+Saving startup configuration to startup.vpc
+.  done
+
+PC-B>
+```
