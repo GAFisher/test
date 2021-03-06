@@ -13,6 +13,14 @@
 2. Создание сетей VLAN и назначение портов коммутатора
 -	Создадим сети VLAN на коммутаторах	
 -	Настроим интерфейс управления и шлюз по умолчанию на каждом коммутаторе, используя информацию об IP-адресе в таблице адресации
+3. Произведем конфигурацию магистрального канала стандарта 802.1Q между коммутаторами
+- Настроим магистральный интерфейс Et0/1 на коммутаторах S1 и S2.
+- Настроим магистральный интерфейс Et0/2 на коммутаторе S1
+4. Произведем настройку маршрутизатора
+5. Проверим, работает ли маршрутизация между VLAN
+- Выполним тесты с PC-A
+- Выполним тест с PC-B
+
 
 **Топология**
 
@@ -161,3 +169,74 @@ S2(config-if)#exit
 S2(config)#ip default-gateway 192.168.3.1
 S2(config)#
 ```
+
+
+Назначим все неиспользуемые порты коммутатора VLAN Parking_Lot, настроим их для
+статического режима доступа и административно деактивируйте их.
+(в режиме access)
+
+```S1(config)#interface Et0/3
+S1(config-if)#switchport mode access 
+S1(config-if)#switchport access vlan 7
+S1(config-if)#shutdown 
+S1(config-if)#exit
+S1(config)#
+```
+```
+S2(config)#interface range Et0/2-3
+S2(config-if-range)#switchport mode access 
+S2(config-if-range)#switchport access vlan 7
+S2(config-if-range)#shutdown
+S2(config-if-range)#exit
+S2(config)#
+```
+
+Назначим сети VLAN соответствующим интерфейсам коммутатора и Убедимся, что VLAN назначены на правильные интерфейсы.
+```
+S1(config)#interface Et0/0
+S1(config-if)#switchport mode access 
+S1(config-if)#switchport access vlan 3
+S1(config)#end
+S1#show vlan brief 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Et0/2
+3    Management                       active    Et0/0
+4    Operations                       active    
+7    ParkingLot                       active    Et0/3
+8    Native                           active    
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+S1#
+```
+```
+S2(config)#interface Et0/0
+S2(config-if)#switchport mode access
+S2(config-if)#switchport access vlan 4
+S2(config)#end
+S2#show vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    
+3    Management                       active    
+4    Operations                       active    Et0/0
+7    ParkingLot                       active    Et0/2, Et0/3
+8    Native                           active    
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+S2#
+```
+
+
+
+
+## 3. Произведем конфигурацию магистрального канала стандарта 802.1Q между коммутаторами
+**Настроим магистральный интерфейс Et0/1 на коммутаторах S1 и S2**
+
+**Настроим магистральный интерфейс Et0/2 на коммутаторе S1**
