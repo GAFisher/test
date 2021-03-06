@@ -10,7 +10,9 @@
 - Произведем базовую настройку маршрутизатора
 - Произведем базовую настройку коммутаторов
 - Настроим ПК
-
+2. Создание сетей VLAN и назначение портов коммутатора
+-	Создадим сети VLAN на коммутаторах	
+-	Настроим интерфейс управления и шлюз по умолчанию на каждом коммутаторе, используя информацию об IP-адресе в таблице адресации
 
 **Топология**
 
@@ -117,4 +119,45 @@ Saving startup configuration to startup.vpc
 .  done
 
 PC-B>
+```
+# 2. Создание сетей VLAN и назначение портов коммутатора
+**Создадим сети VLAN на коммутаторах**
+```S1#configure terminal 
+S1(config)#vlan 3
+S1(config-vlan)#name Management
+S1(config-vlan)#vlan 4
+S1(config-vlan)#name Operations
+S1(config-vlan)#vlan 7
+S1(config-vlan)#name ParkingLot
+S1(config-vlan)#vlan 8
+S1(config-vlan)#name Native
+S1(config-vlan)#exit
+S1(config)#
+```
+```S2#configure terminal 
+S2(config)#vlan 3
+S2(config-vlan)#name Management
+S2(config-vlan)#vlan 4
+S2(config-vlan)#name Operations
+S2(config-vlan)#vlan 7
+S2(config-vlan)#name ParkingLot
+S2(config-vlan)#vlan 8
+S2(config-vlan)#name Native
+S2(config-vlan)#exit
+S2(config)#
+```
+**Настроим интерфейс управления и шлюз по умолчанию на каждом коммутаторе, используя информацию об IP-адресе в таблице адресации**
+```S1(config)#interface vlan 3
+S1(config-if)#ip address 192.168.3.11 255.255.255.0
+S1(config-if)#no shutdown 
+S1(config-if)#exit
+S1(config)#ip default-gateway 192.168.3.1
+S1(config)#
+```
+```S2(config)#interface vlan 3
+S2(config-if)#ip address 192.168.3.12 255.255.255.0
+S2(config-if)#no shutdown 
+S2(config-if)#exit
+S2(config)#ip default-gateway 192.168.3.1
+S2(config)#
 ```
