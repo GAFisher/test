@@ -238,5 +238,175 @@ S2#
 
 ## 3. Произведем конфигурацию магистрального канала стандарта 802.1Q между коммутаторами
 **Настроим магистральный интерфейс Et0/1 на коммутаторах S1 и S2**
+Настроим магистральный интерфейс Et0/1 на обоих коммутаторах: выберем режим работы trunk, установим native vlan 8, разрешим vlan 3,4,8 проходить по транку. Выполним команду show interfaces trunk для проверки ...
 
+```
+S1#configure terminal 
+S1(config)#interface Et0/1
+S1(config-if)#switchport mode trunk
+S1(config-if)#switchport trunk native vlan 8
+S1(config-if)#switchport trunk allowed vlan 3,4,8
+S1(config-if)#end
+S1#show interfaces trunk
+
+Port        Mode             Encapsulation  Status        Native vlan
+Et0/1       on               802.1q         trunking      8
+
+Port        Vlans allowed on trunk
+Et0/1       3-4,8
+
+Port        Vlans allowed and active in management domain
+Et0/1       3-4,8
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Et0/1       3-4,8
+S1#copy running-config startup-config
+Destination filename [startup-config]? 
+Building configuration...
+Compressed configuration from 1450 bytes to 974 bytes[OK]
+S1#
+```
+```
+S2#configure terminal
+S2(config)#interface Et0/1
+S2(config-if)#switchport mode trunk 
+S2(config-if)#switchport trunk native vlan 8
+S2(config-if)#switchport trunk allowed vlan 3,4,8
+S2(config-if)#end
+S2#show interfaces trunk
+
+Port        Mode             Encapsulation  Status        Native vlan
+Et0/1       on               802.1q         trunking      8
+
+Port        Vlans allowed on trunk
+Et0/1       3-4,8
+
+Port        Vlans allowed and active in management domain
+Et0/1       3-4,8
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Et0/1       3-4,8
+S2#copy running-config startup-config
+Destination filename [startup-config]? 
+Building configuration...
+Compressed configuration from 1380 bytes to 940 bytes[OK]
+S2#
+```
 **Настроим магистральный интерфейс Et0/2 на коммутаторе S1**
+Настроим интерфейс S1 Et0/2 с теми же параметрами транка, что и Et0/1. Это транк до
+маршрутизатора.
+
+```
+S1#configure terminal 
+S1(config)#interface Et0/2
+S1(config-if)#switchport mode trunk 
+S1(config-if)#switchport trunk native vlan 8
+S1(config-if)#switchport trunk allowed vlan 3,4,8
+S1(config-if)#end
+S1#show interfaces trunk
+
+Port        Mode             Encapsulation  Status        Native vlan
+Et0/1       on               802.1q         trunking      8
+Et0/2       on               802.1q         trunking      8
+
+Port        Vlans allowed on trunk
+Et0/1       3-4,8
+Et0/2       3-4,8
+
+Port        Vlans allowed and active in management domain
+Et0/1       3-4,8
+Et0/2       3-4,8
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Et0/1       3-4,8
+Et0/2       none
+S1#copy running-config startup-config
+Destination filename [startup-config]? 
+Building configuration...
+Compressed configuration from 1450 bytes to 974 bytes[OK]
+S1#
+```
+Произведем Настройку маршрутизатора.
+Сначала активируем интерфейс Et0/0 на маршрутизаторе. Затем настроим подинтерфейсы для каждой VLAN. Выполним команду show ip interface brief для проверки ...
+```
+R1>enable 
+Password: 
+R1#configure terminal
+R1(config)#interface Et0/0
+R1(config-if)#no shutdown 
+R1(config-if)#interface Et0/0.3
+R1(config-subif)#description Management
+R1(config-subif)#encapsulation dot1Q 3
+R1(config-subif)#ip address 192.168.3.1 255.255.255.0
+R1(config-subif)#interface Et0/0.4   
+R1(config-subif)#description Operations                
+R1(config-subif)#encapsulation dot1Q 4               
+R1(config-subif)#ip address 192.168.4.1 255.255.255.0
+R1(config-subif)#interface Et0/0.8  
+R1(config-subif)#description Native                 
+R1(config-subif)#encapsulation dot1Q 8      
+R1(config-subif)#end   
+R1#show ip interface brief
+Interface                  IP-Address      OK? Method Status                Protocol
+Ethernet0/0                unassigned      YES unset  up                    up      
+Ethernet0/0.3              192.168.3.1     YES manual up                    up      
+Ethernet0/0.4              192.168.4.1     YES manual up                    up      
+Ethernet0/0.8              unassigned      YES unset  up                    up      
+Ethernet0/1                unassigned      YES unset  administratively down down    
+Ethernet0/2                unassigned      YES unset  administratively down down    
+Ethernet0/3                unassigned      YES unset  administratively down down    
+R1#copy running-config startup-config
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+R1#
+```
+
+## 5. Проверим, работает ли маршрутизация между VLAN
+**Выполним тесты с PC-A**
+Отправим эхо-запрос на шлюз по умолчанию:
+```
+PC-A> ping 192.168.3.1 -c 4
+
+84 bytes from 192.168.3.1 icmp_seq=1 ttl=255 time=0.371 ms
+84 bytes from 192.168.3.1 icmp_seq=2 ttl=255 time=0.473 ms
+84 bytes from 192.168.3.1 icmp_seq=3 ttl=255 time=0.427 ms
+84 bytes from 192.168.3.1 icmp_seq=4 ttl=255 time=0.557 ms
+
+PC-A> 
+```
+Отправим эхо-запрос на PC-B:
+```
+PC-A> ping 192.168.4.3 -c 4
+
+84 bytes from 192.168.4.3 icmp_seq=1 ttl=63 time=1.277 ms
+84 bytes from 192.168.4.3 icmp_seq=2 ttl=63 time=0.718 ms
+84 bytes from 192.168.4.3 icmp_seq=3 ttl=63 time=0.780 ms
+84 bytes from 192.168.4.3 icmp_seq=4 ttl=63 time=0.777 ms
+
+PC-A> 
+```
+Отправим эхо-запрос на коммутатор S2:
+```
+PC-A> ping 192.168.3.12 -c 4
+
+84 bytes from 192.168.3.12 icmp_seq=1 ttl=255 time=0.209 ms
+84 bytes from 192.168.3.12 icmp_seq=2 ttl=255 time=0.332 ms
+84 bytes from 192.168.3.12 icmp_seq=3 ttl=255 time=0.373 ms
+84 bytes from 192.168.3.12 icmp_seq=4 ttl=255 time=0.402 ms
+
+PC-A> 
+```
+Все   успешно!
+
+**Выполним тест с PC-B**
+В окне командной строки на PC-B выполним команду tracert на адрес PC-A:
+```
+PC-B> trace 192.168.3.3
+trace to 192.168.3.3, 8 hops max, press Ctrl+C to stop
+ 1   192.168.4.1   0.493 ms  0.450 ms  0.270 ms
+ 2   *192.168.3.3   0.453 ms (ICMP type:3, code:3, Destination port unreachable)
+
+PC-B>
+```
+
