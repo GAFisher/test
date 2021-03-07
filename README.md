@@ -40,7 +40,7 @@
 3. [Произведем конфигурацию магистрального канала стандарта 802.1Q между коммутаторами](https://github.com/GAFisher/test/blob/main/README.md#%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D0%BC-%D0%B2%D1%81%D0%B5-%D0%BD%D0%B5%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D0%B5%D0%BC%D1%8B%D0%B5-%D0%BF%D0%BE%D1%80%D1%82%D1%8B-%D0%BA%D0%BE%D0%BC%D0%BC%D1%83%D1%82%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D0%B2%D0%BE-vlan-parking_lot-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B8%D0%BC-%D0%B8%D1%85-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC%D0%B5-access-%D0%B8-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE-%D0%B4%D0%B5%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%B8%D1%80%D1%83%D0%B5%D0%BC)
     + [Настроим магистральный интерфейс Et0/1 на коммутаторах S1 и S2](https://github.com/GAFisher/test/blob/main/README.md#4-%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%B5%D0%B4%D0%B5%D0%BC-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D1%83-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8%D0%B7%D0%B0%D1%82%D0%BE%D1%80%D0%B0)
     + Настроим магистральный интерфейс Et0/2 на коммутаторе S1
-4. [Произведем настройку маршрутизатора]()
+4. [Произведем настройку маршрутизатора](https://github.com/GAFisher/test/blob/main/README.md#4-%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%B5%D0%B4%D0%B5%D0%BC-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D1%83-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8%D0%B7%D0%B0%D1%82%D0%BE%D1%80%D0%B0)
 5. [Проверим, работает ли маршрутизация между VLAN](https://github.com/GAFisher/test/blob/main/README.md#5-%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%B8%D0%BC-%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%D0%B5%D1%82-%D0%BB%D0%B8-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-vlan)
     + [Выполним тесты с PC-A](https://github.com/GAFisher/test/blob/main/README.md#%D0%B2%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D0%BC-%D1%82%D0%B5%D1%81%D1%82%D1%8B-%D1%81-pc-a)
     + [Выполним тест с PC-B](https://github.com/GAFisher/test/blob/main/README.md#%D0%B2%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D0%BC-%D1%82%D0%B5%D1%81%D1%82-%D1%81-pc-b)
@@ -338,7 +338,7 @@ Compressed configuration from 1450 bytes to 974 bytes[OK]
 S1#
 ```
 ## 4. Произведем настройку маршрутизатора
-Сначала активируем интерфейс Et0/0 на маршрутизаторе. Затем настроим подинтерфейсы для каждой VLAN. Выполним команду show ip interface brief для проверки ...
+Сначала активируем интерфейс Et0/0 на маршрутизаторе. Затем настроим подинтерфейсы для каждой VLAN. Выполним команду show ip interface brief для проверки:
 ```
 R1>enable 
 Password: 
