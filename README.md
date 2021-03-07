@@ -123,7 +123,8 @@ Compressed configuration from 992 bytes to 723 bytes[OK]
 S2#
 ```
 #### Настроим ПК:
-```VPCS> set pcname PC-A
+```
+VPCS> set pcname PC-A
 
 PC-A> ip 192.168.3.3 255.255.255.0 192.168.3.1
 Checking for duplicate address...
@@ -136,7 +137,8 @@ Saving startup configuration to startup.vpc
 PC-A> 
 ```
 
-```VPCS> set pcname PC-B
+```
+VPCS> set pcname PC-B
 
 PC-B> ip 192.168.4.3 255.255.255.0 192.168.4.1
 Checking for duplicate address...
