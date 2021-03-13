@@ -50,7 +50,8 @@
 ## 1. Создание сети и настройка основных параметров устройства
 #### Произведем базовую настройку маршрутизатора:
 
-```Router>enable
+```
+Router>enable
 Router#configure terminal
 Router(config)#hostname R1
 R1(config)#no ip domain-lookup 
@@ -76,7 +77,8 @@ R1#
 
 #### Произведем базовую настройку коммутаторов:
 
-```Switch>enable 
+```
+Switch>enable 
 Switch#configure terminal 
 Switch(config)#hostname S1
 S1(config)#no ip domain-lookup 
@@ -99,7 +101,8 @@ Building configuration...
 Compressed configuration from 992 bytes to 724 bytes[OK]
 S1#
 ```
-```Switch>enable
+```
+Switch>enable
 Switch#configure terminal 
 Switch(config)#hostname S2
 S2(config)#no ip domain-lookup 
